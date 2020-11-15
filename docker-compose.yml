@@ -17,9 +17,9 @@ volumes:
 
 networks:
   monitor-net:
+    driver: bridge
 
 services:
-
   prometheus:
     user: "993:988"
     image: prom/prometheus:v2.22.1
