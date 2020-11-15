@@ -48,10 +48,9 @@ services:
 #        constraints:
 #          - node.hostname == ${HOSTNAME}
 
-
   grafana:
     image: grafana/grafana:7.3.2
-    user: "992:987"
+    user: "472:0"
     depends_on:
       - prometheus
     ports:
