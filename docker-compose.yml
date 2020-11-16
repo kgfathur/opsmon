@@ -22,21 +22,21 @@ volumes:
       device: /data/prometheus2
       o: bind
 
-  sidecare0_data:
+  sidecar0_data:
     driver: local
     driver_opts:
       type: none
       device: /data/sidecar0
       o: bind
 
-  sidecare1_data:
+  sidecar1_data:
     driver: local
     driver_opts:
       type: none
       device: /data/sidecar1
       o: bind
 
-  sidecare2_data:
+  sidecar2_data:
     driver: local
     driver_opts:
       type: none
