@@ -1,11 +1,25 @@
 version: '3.8'
 
 volumes:
-  prometheus_data:
+  prometh0_data:
     driver: local
     driver_opts:
       type: none
-      device: /data/prometheus
+      device: /data/prometheus0
+      o: bind
+
+  prometh1_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/prometheus1
+      o: bind
+      
+  prometh2_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/prometheus2
       o: bind
 
   grafana_data:
@@ -20,12 +34,12 @@ networks:
     driver: bridge
 
 services:
-  prometheus:
+  prometheus0:
     user: "993:988"
     image: prom/prometheus:v2.22.1
     volumes:
       - ./prometheus/:/etc/prometheus/
-      - prometheus_data:/data/prometheus
+      - prometh0_data:/data/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/data/prometheus'
@@ -36,17 +50,40 @@ services:
     networks:
       - monitor-net
     restart: always
-    # links:
-      # - cadvisor:cadvisor
-      # - alertmanager:alertmanager
-#      - pushgateway:pushgateway
-    # depends_on:
-      # - cadvisor
-#      - pushgateway
-#    deploy:
-#      placement:
-#        constraints:
-#          - node.hostname == ${HOSTNAME}
+    
+  prometheus1:
+    user: "993:988"
+    image: prom/prometheus:v2.22.1
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometh1_data:/data/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/data/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    networks:
+      - monitor-net
+    restart: always
+
+  prometheus2:
+    user: "993:988"
+    image: prom/prometheus:v2.22.1
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometh2_data:/data/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/data/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    networks:
+      - monitor-net
+    restart: always
 
   grafana:
     image: grafana/grafana:7.3.2
@@ -65,18 +102,4 @@ services:
       - monitor-net
     restart: always
 
-  # cadvisor:
-    # image: gcr.io/cadvisor/cadvisor:v0.38.4
-    # volumes:
-      # - /:/rootfs:ro
-      # - /var/run:/var/run:rw
-      # - /sys:/sys:ro
-      # - /var/lib/docker/:/var/lib/docker:ro
-    # ports:
-      # - 8080:8080
-    # networks:
-      # - back-tier
-    # restart: always
-    # deploy:
-      # mode: global
 
