@@ -124,7 +124,7 @@ services:
         - "--tsdb.path=/data/prometheus"
         # - "--objstore.config-file=/bucket.yml"
       volumes:
-        - sidecar0:/data/sidecar
+        - sidecar0_data:/data/sidecar
         # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
       depends_on:
         # - minio
@@ -147,7 +147,7 @@ services:
         - "--tsdb.path=/data/prometheus"
         # - "--objstore.config-file=/bucket.yml"
       volumes:
-        - sidecar1:/data/sidecar
+        - sidecar1_data:/data/sidecar
         # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
       depends_on:
         # - minio
@@ -170,7 +170,7 @@ services:
         - "--tsdb.path=/data/prometheus"
         # - "--objstore.config-file=/bucket.yml"
       volumes:
-        - sidecar0:/data/sidecar
+        - sidecar2_data:/data/sidecar
         # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
       depends_on:
         # - minio
