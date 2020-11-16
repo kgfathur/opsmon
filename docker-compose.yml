@@ -22,6 +22,27 @@ volumes:
       device: /data/prometheus2
       o: bind
 
+  sidecare0_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/sidecar0
+      o: bind
+
+  sidecare1_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/sidecar1
+      o: bind
+
+  sidecare2_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/sidecar2
+      o: bind
+
   grafana_data:
     driver: local
     driver_opts:
@@ -87,6 +108,75 @@ services:
     networks:
       - monitor-net
     restart: always
+
+ sidecar0:
+    image: thanosio/thanos:v0.16.0
+    # container_name: thanos-sidecar0
+    command:
+      - "sidecar"
+      - "--debug.name=sidecar-0"
+      - "--log.level=debug"
+      - "--grpc-address=0.0.0.0:10900"
+      - "--grpc-grace-period=1s"
+      - "--http-address=0.0.0.0:10910"
+      - "--http-grace-period=1s"
+      - "--prometheus.url=http://prometheus0:9090"
+      - "--tsdb.path=/data/prometheus"
+      # - "--objstore.config-file=/bucket.yml"
+    volumes:
+      - sidecar0:/data/sidecar
+      # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
+    depends_on:
+      # - minio
+      - prometheus0
+    networks:
+      - monitor-net
+
+ sidecar1:
+    image: thanosio/thanos:v0.16.0
+    # container_name: thanos-sidecar0
+    command:
+      - "sidecar"
+      - "--debug.name=sidecar-1"
+      - "--log.level=debug"
+      - "--grpc-address=0.0.0.0:10901"
+      - "--grpc-grace-period=1s"
+      - "--http-address=0.0.0.0:10911"
+      - "--http-grace-period=1s"
+      - "--prometheus.url=http://prometheus1:9090"
+      - "--tsdb.path=/data/prometheus"
+      # - "--objstore.config-file=/bucket.yml"
+    volumes:
+      - sidecar1:/data/sidecar
+      # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
+    depends_on:
+      # - minio
+      - prometheus1
+    networks:
+      - monitor-net
+
+ sidecar2:
+    image: thanosio/thanos:v0.16.0
+    # container_name: thanos-sidecar0
+    command:
+      - "sidecar"
+      - "--debug.name=sidecar-2"
+      - "--log.level=debug"
+      - "--grpc-address=0.0.0.0:10902"
+      - "--grpc-grace-period=1s"
+      - "--http-address=0.0.0.0:10912"
+      - "--http-grace-period=1s"
+      - "--prometheus.url=http://prometheus2:9090"
+      - "--tsdb.path=/data/prometheus"
+      # - "--objstore.config-file=/bucket.yml"
+    volumes:
+      - sidecar0:/data/sidecar
+      # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
+    depends_on:
+      # - minio
+      - prometheus2
+    networks:
+      - monitor-net
 
   grafana:
     image: grafana/grafana:7.3.2
