@@ -14,7 +14,7 @@ volumes:
       type: none
       device: /data/prometheus1
       o: bind
-      
+
   prometh2_data:
     driver: local
     driver_opts:
@@ -89,7 +89,9 @@ services:
     image: grafana/grafana:7.3.2
     user: "472:0"
     depends_on:
-      - prometheus
+      - prometheus0
+      - prometheus1
+      - prometheus2
     ports:
       - 3000:3000
     volumes:
