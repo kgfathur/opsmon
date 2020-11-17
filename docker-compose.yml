@@ -59,7 +59,7 @@ services:
     user: "993:988"
     image: prom/prometheus:v2.22.1
     volumes:
-      - ./prometheus/:/etc/prometheus/
+      - ./prometheus0/:/etc/prometheus/
       - prometh0_data:/data/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -77,7 +77,7 @@ services:
     user: "993:988"
     image: prom/prometheus:v2.22.1
     volumes:
-      - ./prometheus/:/etc/prometheus/
+      - ./prometheus1/:/etc/prometheus/
       - prometh1_data:/data/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -95,7 +95,7 @@ services:
     user: "993:988"
     image: prom/prometheus:v2.22.1
     volumes:
-      - ./prometheus/:/etc/prometheus/
+      - ./prometheus2/:/etc/prometheus/
       - prometh2_data:/data/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
