@@ -4,7 +4,7 @@ global:
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
   # scrape_timeout is set to the global default (10s).
   external_labels:
-    prometheus_server: prometheus0
+    prometheus_server: prometheus1
 
 # Alertmanager configuration
 alerting:
@@ -23,7 +23,7 @@ rule_files:
 # Here it's Prometheus itself.
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-  - job_name: 'prometheus0'
+  - job_name: 'prometheus1'
 
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
