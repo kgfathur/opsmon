@@ -178,6 +178,64 @@ services:
       networks:
         - monitor-net
 
+  query0:
+    image: thanosio/thanos:v0.16.0
+    # container_name: thanos-query0
+    command:
+      - "query"
+      - "--debug.name=query-0"
+      - "--log.level=debug"
+      - "--grpc-address=0.0.0.0:10920"
+      - "--grpc-grace-period=1s"
+      - "--http-address=0.0.0.0:10930"
+      - "--http-grace-period=1s"
+      - "--query.replica-label=prometheus"
+      - "--store=sidecar0:10900"
+      - "--store=sidecar1:10901"
+      - "--store=sidecar2:10902"
+      # - "--store=store:10905"
+      # - "--store=receive:10907"
+    ports:
+      - 10930:10930
+    depends_on:
+      # - minio
+      - sidecar0
+      - sidecar1
+      - sidecar2
+      # - store
+      # - receive
+    networks:
+      - monitor-net
+
+  query1:
+    image: thanosio/thanos:v0.16.0
+    # container_name: thanos-query0
+    command:
+      - "query"
+      - "--debug.name=query-1"
+      - "--log.level=debug"
+      - "--grpc-address=0.0.0.0:10921"
+      - "--grpc-grace-period=1s"
+      - "--http-address=0.0.0.0:10931"
+      - "--http-grace-period=1s"
+      - "--query.replica-label=prometheus"
+      - "--store=sidecar0:10900"
+      - "--store=sidecar1:10901"
+      - "--store=sidecar2:10902"
+      # - "--store=store:10905"
+      # - "--store=receive:10907"
+    ports:
+      - 10931:10931
+    depends_on:
+      # - minio
+      - sidecar0
+      - sidecar1
+      - sidecar2
+      # - store
+      # - receive
+    networks:
+      - monitor-net
+
   grafana:
     image: grafana/grafana:7.3.2
     user: "472:0"
