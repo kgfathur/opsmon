@@ -43,13 +43,6 @@ volumes:
       device: /data/sidecar2
       o: bind
 
-  grafana_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /data/grafana
-      o: bind
-
 networks:
   monitor-net:
     driver: bridge
@@ -111,7 +104,6 @@ services:
 
   sidecar0:
       image: thanosio/thanos:v0.16.0
-      # container_name: thanos-sidecar0
       command:
         - "sidecar"
         - "--debug.name=sidecar-0"
@@ -122,19 +114,15 @@ services:
         - "--http-grace-period=1s"
         - "--prometheus.url=http://prometheus0:9090"
         - "--tsdb.path=/data/prometheus"
-        # - "--objstore.config-file=/bucket.yml"
       volumes:
         - sidecar0_data:/data/sidecar
-        # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
       depends_on:
-        # - minio
         - prometheus0
       networks:
         - monitor-net
 
   sidecar1:
       image: thanosio/thanos:v0.16.0
-      # container_name: thanos-sidecar0
       command:
         - "sidecar"
         - "--debug.name=sidecar-1"
@@ -145,19 +133,15 @@ services:
         - "--http-grace-period=1s"
         - "--prometheus.url=http://prometheus1:9090"
         - "--tsdb.path=/data/prometheus"
-        # - "--objstore.config-file=/bucket.yml"
       volumes:
         - sidecar1_data:/data/sidecar
-        # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
       depends_on:
-        # - minio
         - prometheus1
       networks:
         - monitor-net
 
   sidecar2:
       image: thanosio/thanos:v0.16.0
-      # container_name: thanos-sidecar0
       command:
         - "sidecar"
         - "--debug.name=sidecar-2"
@@ -168,19 +152,15 @@ services:
         - "--http-grace-period=1s"
         - "--prometheus.url=http://prometheus2:9090"
         - "--tsdb.path=/data/prometheus"
-        # - "--objstore.config-file=/bucket.yml"
       volumes:
         - sidecar2_data:/data/sidecar
-        # - ./thanos/sidecar/bucket.yml:/etc/thanos/bucket.yml
       depends_on:
-        # - minio
         - prometheus2
       networks:
         - monitor-net
 
   query0:
     image: thanosio/thanos:v0.16.0
-    # container_name: thanos-query0
     command:
       - "query"
       - "--debug.name=query-0"
@@ -194,23 +174,17 @@ services:
       - "--store=sidecar0:10900"
       - "--store=sidecar1:10901"
       - "--store=sidecar2:10902"
-      # - "--store=store:10905"
-      # - "--store=receive:10907"
     ports:
       - 10930:10930
     depends_on:
-      # - minio
       - sidecar0
       - sidecar1
       - sidecar2
-      # - store
-      # - receive
     networks:
       - monitor-net
 
   query1:
     image: thanosio/thanos:v0.16.0
-    # container_name: thanos-query0
     command:
       - "query"
       - "--debug.name=query-1"
@@ -224,37 +198,12 @@ services:
       - "--store=sidecar0:10900"
       - "--store=sidecar1:10901"
       - "--store=sidecar2:10902"
-      # - "--store=store:10905"
-      # - "--store=receive:10907"
     ports:
       - 10931:10931
     depends_on:
-      # - minio
       - sidecar0
       - sidecar1
       - sidecar2
-      # - store
-      # - receive
     networks:
       - monitor-net
-
-  grafana:
-    image: grafana/grafana:7.3.2
-    user: "472:0"
-    depends_on:
-      - prometheus0
-      - prometheus1
-      - prometheus2
-    ports:
-      - 3000:3000
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
-      - ./grafana/home.json:/usr/share/grafana/public/dashboards/home.json
-    env_file:
-      - ./grafana/config.monitoring
-    networks:
-      - monitor-net
-    restart: always
-
 
